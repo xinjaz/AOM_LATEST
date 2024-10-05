@@ -1,19 +1,26 @@
 from django.shortcuts import render, redirect
-
+from .models import *
 from item.models import Category,Item
 
 from .forms import SignupForm
-
+from django.contrib.auth import logout
 def index(request):
     items = Item.objects.filter(is_sold=False)[0:6]
     categories = Category.objects.all()
+    if request.user.is_authenticated:
+        return render(request, 'core/index.html', {
+            'categories': categories,
+            'items': items,
+        })
+    else:
+        return redirect('core:login')
 
-    return render(request, 'core/index.html', {
-        'categories': categories,
-        'items': items,
-    })
-
+def logout_view(request):
+    logout(request)
+    return redirect('core:login')
 def contact(request):
+    if request.method == 'POST':
+        ContactModel.objects.create(first_name=request.POST['first_name'], last_name=request.POST['last_name'], email=request.POST['email'], message=request.POST['message'])
     return render(request, 'core/contact.html')
 
 def privacy(request):
