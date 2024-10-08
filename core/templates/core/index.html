@@ -1,51 +1,77 @@
 {% extends 'core/base.html' %}
 
-{% block title %}{% endblock %}
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+{% block title %}Dashboard{% endblock %}
+
 {% block content %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-     {% if request.user.is_superuser and request.user.is_authenticated %}
-        admin dashboard
-     {% else %}
-         <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
-            <h2 class="mb-10 text-3xl font-bold text-center">Categories</h2>
-
-            <div class="grid grid-cols-6 gap-2">
-                {% for category in categories %}
-                    <div>
-                        <a href="# ">
-                            <div class="p-2 bg-white rounded-sm">
-                                <h2 class="font-semibold text-center text-xl">{{ category.name }}</h2>
-                                <p class="text-gray-500 text-center text-sm">{{ category.items.count }} items</p>
-                            </div>
-
-                        </a>
-                    </div>
-                {% endfor %}
-            </div>
+{% if request.user.is_superuser and request.user.is_authenticated %}
+    <h1>Admin Dashboard</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>User Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>
+                    <ul>
+                        {% for item in result.username %}
+                        <li>No items</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No users found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+        <h2 class="mb-10 text-3xl font-bold text-center">Categories</h2>
+        <div class="grid grid-cols-6 gap-2">
+            {% for category in categories %}
+                <div>
+                    <a href="# ">
+                        <div class="p-2 bg-white rounded-sm">
+                            <h2 class="font-semibold text-center text-xl">{{ category.name }}</h2>
+                            <p class="text-gray-500 text-center text-sm">{{ category.items.count }} items</p>
+                        </div>
+                    </a>
+                </div>
+            {% empty %}
+            <p>No categories found.</p>
+            {% endfor %}
         </div>
+    </div>
 
-        <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
-            <h2 class="mb-12 text-2xl text-center">Newest items</h2>
-
-            <div class="grid grid-cols-3 gap-3">
-                {% for item in items %}
-                    <div>
-                        <a href="{% url 'item:detail' item.id %}">
-                            <div>
-                                <img src="{{ item.image.url }}" class="rounded-t-xl">
-                            </div>
-
-                            <div class="p-6 bg-white rounded-b-xl">
-                                <h2 class="text-2xl">{{ item.name }}</h2>
-                                <p class="text-gray-500">Price: {{ item.price }}</p>
-                            </div>
-                        </a>
-                    </div>
-                {% endfor %}
-            </div>
+    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+        <h2 class="mb-12 text-2xl text-center">Newest items</h2>
+        <div class="grid grid-cols-3 gap-3">
+            {% for item in items %}
+                <div>
+                    <a href="{% url 'item:detail' item.id %}">
+                        <div>
+                            <img src="{{ item.image.url }}" class="rounded-t-xl">
+                        </div>
+                        <div class="p-6 bg-white rounded-b-xl">
+                            <h2 class="text-2xl">{{ item.name }}</h2>
+                            <p class="text-gray-500">Price: {{ item.price }}</p>
+                        </div>
+                    </a>
+                </div>
+            {% empty %}
+            <p>No items available.</p>
+            {% endfor %}
         </div>
-     {% endif %}
-
+    </div>
+{% endif %}
 
 {% endblock %}

@@ -79,3 +79,24 @@ def delete(request, pk):
     item.delete()
 
     return redirect('dashboard:index')
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt
+def rate_item(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        rating = data.get('rating')
+        item_id = data.get('item_id')
+
+        # Process the rating (e.g., save to database)
+        # Rating.objects.create(item_id=item_id, rating=rating, user=request.user)
+
+        return JsonResponse({'message': 'Rating submitted successfully!'})
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
